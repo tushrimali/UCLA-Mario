@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="cs174a_movement.js"></script>
+<script type="text/javascript" src="cs174a_term_project.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <title>CS 174A Fall 2014 Term Project (Team 2)</title>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+    precision mediump float;
+
+    attribute vec3 vPosition;
+    attribute vec3 vNormal;
+    attribute vec2 vUV;
+    uniform mat4 mvMatrix;
+    uniform mat4 pMatrix;
+    uniform vec3 lightPosition;
+    varying vec3 fL, fE, fH, fN;
+    varying vec2 fUV;
+
+    uniform float scrollSpeed;
+    uniform bool scrollTexture;
+    uniform float zoomFactor;
+    uniform bool zoomTexture;
+
+    void main()
+    {
+        vec3 pos = (mvMatrix * vec4(vPosition, 1.0)).xyz;
+        //light position in camera space
+        
+        fL = normalize(lightPosition - pos); 
+        fE = normalize(-pos);
+        fH = normalize(fL + fE);
+        fN = normalize(mvMatrix * vec4(vNormal, 0.0)).xyz; 
+
+        vec2 texCoord = vUV;
+
+        if(scrollTexture) {
+            texCoord = vec2(vUV.x - scrollSpeed, vUV.y);
+        }
+
+        if(zoomTexture) {
+            if(vUV.x != 0.0)
+                texCoord.x = vUV.x - zoomFactor;
+            else
+                texCoord.x = vUV.x + zoomFactor;
+            if(vUV.y != 0.0)
+                texCoord.y = vUV.y - zoomFactor;
+            else
+                texCoord.y = vUV.y + zoomFactor;
+        }
+
+        fUV = texCoord; 
+        vec4 mv_pos = vec4(pos, 1.0);
+        gl_Position = pMatrix * mv_pos;
+
+    } 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+    precision mediump float;
+    varying vec3 fL, fE, fH, fN;
+    varying vec2 fUV;
+
+    uniform sampler2D uSampler;
+    uniform float shininess;
+    uniform vec4 color;
+    uniform bool isTwoD;
+
+    void main()
+    {
+        vec4 texColor;
+ 
+        texColor = texture2D(uSampler, fUV );
+
+        // NO LIGHTING (i.e. uniform)
+        if(isTwoD)
+            gl_FragColor = texColor;
+        else {
+
+            // FOR LIGHTING
+            vec4 ambient = 0.5 * texColor;
+            float kd = abs(dot(fL, fN));
+            vec4 diffuse = kd * 0.7 * texColor;
+
+            float ks = pow(abs(dot(fN, fH)), shininess);    
+            vec4 specular = 0.25 * ks * vec4(1.0, 1.0, 1.0, 1.0);
+
+            vec4 fColor = ambient + diffuse + specular;
+            fColor.a  = 1.0;
+
+            gl_FragColor = fColor;
+        }
+
+    }
+</script>
+
+</head>
+
+
+<body bgcolor="#000000">
+    <h1>
+       UCLA Mario
+    </h1>
+
+    <div id="canvas-wrap">
+        <canvas id="gl-canvas" width="800" height="480">
+        Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+        <h2 class="scorefooter">Score: <span id="score">0</span></h3>
+        <h2 class="livesfooter">Lives: <span id="numLives">3</span></h3>  
+        <h2 class="gameoverfooter"> <span id="gameover"></span></h3>
+        <h2 class="youwinfooter"> <span id="youwin"></span></h3>  
+    </div>
+
+       <div id="instructions">
+        <ol>
+            <li>Press <b>'s'</b> to start/stop texture scrolling</li>
+            <li>Press <b>RIGHT</b> to move RIGHT</li>
+            <li>Press <b>LEFT</b> to move LEFT</li>
+            <li>Press <b>UP</b> to jump</li>
+        </ol>
+    </div>
+
+
+</body>
+</html>

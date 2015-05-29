@@ -1,0 +1,69 @@
+#canvas-wrap { position:relative }
+
+.scorefooter
+{ 
+	position:absolute; 
+	font-family: "Consolas";
+	top:0px; 
+	left:0px;
+	color: #FFF;
+	margin-left:630px; 
+	margin-top:430px; 
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
+.livesfooter
+{ 
+	position:absolute; 
+	font-family: "Consolas";
+	top:0px; 
+	left:0px;
+	color: #FFF;
+	margin-left:50px; 
+	margin-top:430px; 
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
+.gameoverfooter
+{ 
+	position:absolute; 
+	font-family: "Consolas";
+	top:0px; 
+	left:0px;
+	color: #FFF;
+	margin-left:365px; 
+	margin-top:430px; 
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
+.youwinfooter
+{ 
+	position:absolute; 
+	font-family: "Consolas";
+	top:0px; 
+	left:0px;
+	color: #FFF;
+	margin-left:365px; 
+	margin-top:430px; 
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
+body {
+    color: white;
+}
+
+h1 {
+    text-indent: 300px;
+}
+
+p {
+    text-indent: 50px;
+}
